@@ -47,7 +47,12 @@ public class Reflect<T> {
      * @return the value of the field.
      */
     public Object get(Field field) {
-	return null;
+	try {
+	    field.setAccessible(true);
+	    return field.get(subject);
+	} catch (Exception e) {
+	    throw new RuntimeException(e);
+	}
     }
 
 }
