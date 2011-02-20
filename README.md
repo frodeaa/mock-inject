@@ -29,3 +29,11 @@ Example:
 	}
 
 The MockInject should probably only be used in tests...
+
+Maven dependency:
+
+	<dependency>
+		<groupId>mock-inject</groupId>
+		<artifactId>mock-inject</artifactId>
+		<version>0.1</version>
+	</dependency>
