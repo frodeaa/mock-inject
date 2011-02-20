@@ -1,8 +1,15 @@
 package mock.inject;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import javax.inject.Inject;
+import javax.inject.Qualifier;
 
 import org.junit.Test;
 
@@ -71,6 +78,62 @@ public class PlainInjectorTest {
 
 	assertSame("Field not injected into ", dep, subject.dep);
 	assertSame("Field not injected into ", otherDep, subject.otherDep);
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
+	    ElementType.TYPE })
+    @Qualifier
+    static @interface KindA {
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
+	    ElementType.TYPE })
+    @Qualifier
+    static @interface KindB {
+
+    }
+
+    static class InjectTwoKinds {
+
+	@Inject
+	@KindA
+	private Dep depKindA;
+
+	@Inject
+	@KindB
+	private Dep depKindB;
+
+    }
+
+    @Test
+    public void testInjectOnlyQualifierMatch() {
+
+	Dep dep = new Dep();
+	InjectTwoKinds subject = new InjectTwoKinds();
+
+	new PlainInjector<InjectTwoKinds>(subject).injectWith(KindA.class, dep);
+
+	assertSame("Field not injected into ", dep, subject.depKindA);
+	assertNull("Field injected into ", subject.depKindB);
+
+    }
+
+    @Test
+    public void testInjectTwoQualifierMatch() {
+
+	Dep depKindA = new Dep();
+	Dep depKindB = new Dep();
+	InjectTwoKinds subject = new InjectTwoKinds();
+
+	new PlainInjector<InjectTwoKinds>(subject).injectWith(KindA.class,
+		depKindA).injectWith(KindB.class, depKindB);
+
+	assertSame("Field not injected into ", depKindA, subject.depKindA);
+	assertSame("Field not injected into ", depKindB, subject.depKindB);
 
     }
 
