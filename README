@@ -1,13 +1,14 @@
 ## MockInjector
 
 Set fields and single parameter methods that are annotated with @Inject. A simple utility
-tool for testing CDI managed objects without needing to setting values manually while testing.
+tool for testing CDI managed objects without needing to setting fields manually while testing,
+or creating setters for all @Inject annotated fields.
 
 Example:
 
 	import static mock.inject.MockInject.into;
 	
-	  &#64;Test
+	  @Test
 	  public void test() {
 	 
 	   into( bean )
@@ -18,12 +19,12 @@ Example:
 	 }
 	 
 	class Bean {
-	     &#64;Inject 
+	     @Inject 
 	     private A a;
 	     
 	     private A b;
 	  
-	     &#64;Inject
+	     @Inject
 	     public setB( &#64;KindB A b ){...}
 	}
 
