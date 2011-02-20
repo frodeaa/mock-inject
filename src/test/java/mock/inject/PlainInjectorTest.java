@@ -137,4 +137,66 @@ public class PlainInjectorTest {
 
     }
 
+    static class InjectTwoSameKind {
+
+	@Inject
+	@KindA
+	private Dep depKindA1;
+
+	@Inject
+	@KindA
+	private Dep depKindA2;
+
+    }
+
+    @Test
+    public void testInjectTwoSameKind() {
+
+	Dep depKindA = new Dep();
+	InjectTwoSameKind subject = new InjectTwoSameKind();
+
+	new PlainInjector<InjectTwoSameKind>(subject).injectWith(KindA.class,
+		depKindA);
+
+	assertSame("Field not injected into ", depKindA, subject.depKindA1);
+	assertSame("Field not injected into ", depKindA, subject.depKindA2);
+
+    }
+
+    static class SubDep extends Dep {
+
+    }
+
+    @Test
+    public void testInjectSubClass() {
+
+	SubDep subDep = new SubDep();
+	InjectSubject subject = new InjectSubject();
+
+	new PlainInjector<InjectSubject>(subject).inject(subDep);
+
+	assertSame("Field not injected", subDep, subject.dep);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectSameFieldTwice() {
+
+	Dep dep = new Dep();
+	InjectSubject subject = new InjectSubject();
+
+	new PlainInjector<InjectSubject>(subject).inject(dep, dep);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectSameFieldTwiceChain() {
+
+	Dep dep = new Dep();
+	InjectSubject subject = new InjectSubject();
+
+	new PlainInjector<InjectSubject>(subject).inject(dep).inject(dep);
+
+    }
+
 }

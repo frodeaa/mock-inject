@@ -41,6 +41,7 @@ public class PlainInjector<T> implements Injector<T> {
     private boolean injectFields(Class<? extends Annotation> qualifier,
 	    Object stuff) {
 
+	boolean success = false;
 	for (Field field : subject.getClass().getDeclaredFields()) {
 	    if (isInjectable(field) && isMatchType(field, stuff)
 		    && isQualifierMatch(qualifier, field)) {
@@ -48,10 +49,10 @@ public class PlainInjector<T> implements Injector<T> {
 		fieldAssignedScreem(field);
 
 		on(subject).set(field, stuff);
-		return true;
+		success = true;
 	    }
 	}
-	return false;
+	return success;
     }
 
     private boolean isQualifierMatch(Class<? extends Annotation> qualifier,
