@@ -1,9 +1,11 @@
 package mock.inject;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.junit.Test;
 
@@ -87,9 +89,46 @@ public class ReflectTest {
 	Reflect.on(subject).set(otherField, "new-value");
 
     }
-    
-    
-    
-    
+
+    @Test
+    public void testCall() throws SecurityException, NoSuchMethodException {
+
+	MethodObject subject = new MethodObject();
+	Method method = subject.getClass().getDeclaredMethod("method",
+		String.class);
+	String param = "a-param";
+
+	Reflect.on(subject).call(method, param);
+
+	assertSame("Param not updated", param, subject.param);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCallFail() throws SecurityException, NoSuchMethodException {
+	MethodObject subject = new MethodObject();
+	Method method = OtherMethod.class.getDeclaredMethod("method",
+		String.class);
+	String param = "a-param";
+
+	Reflect.on(subject).call(method, param);
+    }
+
+    static class MethodObject {
+	private String param;
+
+	@SuppressWarnings("unused")
+	private void method(String param) {
+	    this.param = param;
+	}
+
+    }
+
+    static class OtherMethod {
+
+	@SuppressWarnings("unused")
+	private void method(String param) {
+	}
+
+    }
 
 }

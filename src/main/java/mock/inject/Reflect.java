@@ -47,12 +47,14 @@ public class Reflect<T> {
      * @return the value of the field.
      */
     public Object get(Field field) {
+	
 	try {
 	    field.setAccessible(true);
 	    return field.get(subject);
 	} catch (Exception e) {
 	    throw new RuntimeException(e);
 	}
+	
     }
 
     /**
@@ -65,6 +67,7 @@ public class Reflect<T> {
      * @return self.
      */
     public Reflect<T> set(Field field, Object value) {
+
 	try {
 	    field.setAccessible(true);
 	    field.set(subject, value);
@@ -73,6 +76,7 @@ public class Reflect<T> {
 	} finally {
 	    field.setAccessible(false);
 	}
+
 	return this;
     }
 
@@ -86,6 +90,15 @@ public class Reflect<T> {
      * @return self.
      */
     public Reflect<T> call(Method method, Object param) {
+
+	try {
+	    method.setAccessible(true);
+	    method.invoke(subject, param);
+	} catch (Exception e) {
+	    throw new RuntimeException(e);
+	} finally {
+	    method.setAccessible(false);
+	}
 
 	return this;
     }
