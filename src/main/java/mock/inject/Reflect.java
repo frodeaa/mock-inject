@@ -39,4 +39,15 @@ public class Reflect<T> {
 	return subject;
     }
 
+    /**
+     * Get the field value.
+     * 
+     * @param field
+     *            the field to get the value of.
+     * @return the value of the field.
+     */
+    public Object get(Field field) {
+	return null;
+    }
+
 }
