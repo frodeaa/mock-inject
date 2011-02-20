@@ -33,4 +33,45 @@ public class PlainInjectorTest {
 	assertSame("Dep not injected", dep, subject.dep);
     }
 
+    static class OtherDep {
+    }
+
+    static class InjectTwo {
+
+	@Inject
+	private Dep dep;
+
+	@Inject
+	private OtherDep otherDep;
+
+    }
+
+    @Test
+    public void testInjectTwoFields() {
+
+	Dep dep = new Dep();
+	OtherDep otherDep = new OtherDep();
+	InjectTwo subject = new InjectTwo();
+
+	new PlainInjector<InjectTwo>(subject).inject(dep, otherDep);
+
+	assertSame("Field not injected into ", dep, subject.dep);
+	assertSame("Field not injected into ", otherDep, subject.otherDep);
+
+    }
+
+    @Test
+    public void testInjectTwoFieldsChain() {
+
+	Dep dep = new Dep();
+	OtherDep otherDep = new OtherDep();
+	InjectTwo subject = new InjectTwo();
+
+	new PlainInjector<InjectTwo>(subject).inject(dep).inject(otherDep);
+
+	assertSame("Field not injected into ", dep, subject.dep);
+	assertSame("Field not injected into ", otherDep, subject.otherDep);
+
+    }
+
 }
