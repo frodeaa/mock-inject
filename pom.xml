@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>mock-inject</groupId>
 	<artifactId>mock-inject</artifactId>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 	<name>mock-inject</name>
 	<description>CDI @Inject mock</description>
 
