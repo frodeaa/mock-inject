@@ -7,6 +7,15 @@
 	<name>mock-inject</name>
 	<description>CDI @Inject mock</description>
 
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<!-- Ensures we are compiling at 1.6 level -->

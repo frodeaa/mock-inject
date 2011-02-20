@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
+ * Use reflection on an object.
  * 
  * @author frode
  * 
@@ -12,6 +13,12 @@ import java.lang.reflect.Method;
  */
 public class Reflect<T> {
 
+    /**
+     * Create a new Reflect
+     * @param <T> the type to reflect on.
+     * @param subject the subject to call reflections on.
+     * @return the new Reflect instance.
+     */
     public static <T> Reflect<T> on(T subject) {
 	return new Reflect<T>(subject);
     }
@@ -22,42 +29,6 @@ public class Reflect<T> {
 	this.subject = subject;
     }
 
-    public Reflect<T> set(Field field, Object value) {
-	try {
-	    field.setAccessible(true);
-	    field.set(subject, value);
-	} catch (Exception e) {
-	    throw new RuntimeException(e);
-	} finally {
-	    field.setAccessible(false);
-	}
-	return this;
-    }
-
-    public Reflect<T> call(Method method, Object param) {
-	try {
-	    method.setAccessible(true);
-	    method.invoke(subject, param);
-	} catch (Exception e) {
-	    throw new RuntimeException(e);
-	} finally {
-	    method.setAccessible(false);
-	}
-
-	return this;
-    }
-
-    public Object get(Field field) {
-	try {
-	    field.setAccessible(true);
-	    return field.get(subject);
-	} catch (Exception e) {
-	    throw new RuntimeException(e);
-	}
-    }
-
-    public T reflected() {
-	return subject;
-    }
+    
 
 }
