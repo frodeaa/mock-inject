@@ -199,4 +199,33 @@ public class PlainInjectorTest {
 
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectSameFieldTwiceDifferentDep() {
+
+	Dep dep1 = new Dep();
+	Dep dep2 = new Dep();
+	InjectSubject subject = new InjectSubject();
+
+	new PlainInjector<InjectSubject>(subject).inject(dep1, dep2);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectSameFieldTwiceDifferentDepChain() {
+
+	Dep dep1 = new Dep();
+	Dep dep2 = new Dep();
+	InjectSubject subject = new InjectSubject();
+
+	new PlainInjector<InjectSubject>(subject).inject(dep1).inject(dep2);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectFieldsNoMatch() {
+
+	InjectSubject subject = new InjectSubject();
+
+	new PlainInjector<InjectSubject>(subject).inject(new Integer(0));
+
+    }
+
 }
