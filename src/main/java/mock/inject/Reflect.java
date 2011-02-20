@@ -15,9 +15,12 @@ public class Reflect<T> {
 
     /**
      * Create a new Reflect
-     * @param <T> the type to reflect on.
-     * @param subject the subject to call reflections on.
-     * @return the new Reflect instance.
+     * 
+     * @param <T>
+     *            the type to reflect on.
+     * @param subject
+     *            the subject to call reflections on.
+     * @return
      */
     public static <T> Reflect<T> on(T subject) {
 	return new Reflect<T>(subject);
@@ -29,6 +32,11 @@ public class Reflect<T> {
 	this.subject = subject;
     }
 
-    
+    /**
+     * @return the instance that is reflected on.
+     */
+    public T reflected() {
+	return subject;
+    }
 
 }
