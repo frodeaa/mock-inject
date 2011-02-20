@@ -78,6 +78,7 @@ public class ReflectTest {
 	Reflect.on(subject).set(field, "new-value");
 
 	assertSame("Field value", "new-value", subject.field);
+	
     }
 
     @Test(expected = RuntimeException.class)
@@ -101,6 +102,7 @@ public class ReflectTest {
 	Reflect.on(subject).call(method, param);
 
 	assertSame("Param not updated", param, subject.param);
+
     }
 
     @Test(expected = RuntimeException.class)
@@ -111,6 +113,7 @@ public class ReflectTest {
 	String param = "a-param";
 
 	Reflect.on(subject).call(method, param);
+
     }
 
     static class MethodObject {
