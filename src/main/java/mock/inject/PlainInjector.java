@@ -92,6 +92,8 @@ public class PlainInjector<T> implements Injector<T> {
 
     private boolean injectMethods(Class<? extends Annotation> qualifier,
 	    Object stuff) {
+
+	boolean success = false;
 	for (Method method : subject.getClass().getDeclaredMethods()) {
 	    if (isInjectable(method) && isMatchType(method, stuff)
 		    && isQualifierMatch(qualifier, method)) {
@@ -101,10 +103,10 @@ public class PlainInjector<T> implements Injector<T> {
 		on(subject).call(method, stuff);
 		methodValue.put(method, stuff);
 
-		return true;
+		success = true;
 	    }
 	}
-	return false;
+	return success;
     }
 
     private void methodCalledScreem(Method method) {

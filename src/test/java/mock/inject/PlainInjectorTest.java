@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 import javax.inject.Inject;
 import javax.inject.Qualifier;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 /**
@@ -241,6 +243,21 @@ public class PlainInjectorTest {
 
     }
 
+    static class FieldNoInject {
+
+	private Dep noInject;
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectNoInjectAnnotation() {
+
+	FieldNoInject subject = new FieldNoInject();
+
+	new PlainInjector<FieldNoInject>(subject).inject(new Dep());
+
+    }
+
     static class InjectMethod {
 	private Dep dep;
 
@@ -328,4 +345,88 @@ public class PlainInjectorTest {
 	assertSame("Method not injected", subDep, subject.dep);
 
     }
+
+    @Test
+    public void testInjectSubClassParameterWithQualifier() {
+
+	SubDep subDep = new SubDep();
+	InjectQualifierMethod subject = new InjectQualifierMethod();
+
+	new PlainInjector<InjectQualifierMethod>(subject).injectWith(
+		KindA.class, subDep);
+
+	assertSame("Method not injected", subDep, subject.dep);
+
+    }
+
+    static class MultiMethod {
+	private Dep dep1;
+	private Dep dep2;
+
+	@Inject
+	public void setDep1(Dep dep1) {
+	    this.dep1 = dep1;
+	}
+
+	@Inject
+	public void setDep2(Dep dep2) {
+	    this.dep2 = dep2;
+	}
+
+    }
+
+    @Test
+    public void testInjectMultiMethods() {
+
+	Dep dep = new Dep();
+	MultiMethod subject = new MultiMethod();
+
+	new PlainInjector<MultiMethod>(subject).inject(dep);
+
+	assertSame("Method not injected", dep, subject.dep1);
+	assertSame("Method not injected", dep, subject.dep2);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectMultiSameMethod() {
+
+	Dep dep1 = new Dep();
+	Dep dep2 = new Dep();
+
+	InjectMethod subject = new InjectMethod();
+
+	new PlainInjector<InjectMethod>(subject).inject(dep1, dep2);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectMultiSameMethodChain() {
+
+	Dep dep1 = new Dep();
+	Dep dep2 = new Dep();
+
+	InjectMethod subject = new InjectMethod();
+
+	new PlainInjector<InjectMethod>(subject).inject(dep1).inject(dep2);
+
+    }
+
+    static class MethodNoInject {
+
+	public void methodWithoutInjectAnnotation(Dep dep) {
+	    Assert.fail("Method should never be injected");
+	}
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectMethodMissingInject() {
+
+	MethodNoInject subject = new MethodNoInject();
+
+	new PlainInjector<MethodNoInject>(subject).inject(new Dep());
+
+    }
+
 }
