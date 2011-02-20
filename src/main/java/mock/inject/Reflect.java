@@ -55,4 +55,9 @@ public class Reflect<T> {
 	}
     }
 
+    public Reflect<T> set(Field field, Object value) {
+
+	return this;
+    }
+
 }
