@@ -63,6 +63,7 @@ public class ReflectTest {
     }
 
     static class Other {
+	@SuppressWarnings("unused")
 	private String field;
     }
 
@@ -86,5 +87,9 @@ public class ReflectTest {
 	Reflect.on(subject).set(otherField, "new-value");
 
     }
+    
+    
+    
+    
 
 }

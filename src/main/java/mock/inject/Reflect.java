@@ -76,4 +76,18 @@ public class Reflect<T> {
 	return this;
     }
 
+    /**
+     * Call method with parameter.
+     * 
+     * @param method
+     *            the method to call.
+     * @param param
+     *            the parameter to call the method with.
+     * @return self.
+     */
+    public Reflect<T> call(Method method, Object param) {
+
+	return this;
+    }
+
 }
