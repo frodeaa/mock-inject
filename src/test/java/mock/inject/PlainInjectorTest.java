@@ -228,4 +228,15 @@ public class PlainInjectorTest {
 
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectSameFieldWithQualifierTwice() {
+
+	Dep depKindA1 = new Dep();
+	Dep depKindA2 = new Dep();
+	InjectTwoKinds subject = new InjectTwoKinds();
+
+	new PlainInjector<InjectTwoKinds>(subject).injectWith(KindA.class,
+		depKindA1).injectWith(KindA.class, depKindA2);
+    }
+
 }
