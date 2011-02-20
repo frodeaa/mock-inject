@@ -78,4 +78,17 @@ public class MockInjectTest {
 	assertSame("Method not injected", dep, subject.methodDep);
 
     }
+
+    @Test
+    public void testInjectQualifierOnly() {
+
+	Dep dep = new Dep();
+	Subject subject = new Subject();
+
+	into(subject).injectWith(KindA.class, dep);
+
+	assertNull("Field not injected", subject.dep);
+	assertSame("Method not injected", dep, subject.methodDep);
+
+    }
 }

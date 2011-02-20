@@ -106,6 +106,7 @@ public class ReflectTest {
 
     @Test(expected = RuntimeException.class)
     public void testCallFail() throws SecurityException, NoSuchMethodException {
+	
 	MethodObject subject = new MethodObject();
 	Method method = OtherMethod.class.getDeclaredMethod("method",
 		String.class);

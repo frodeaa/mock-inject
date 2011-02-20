@@ -95,6 +95,11 @@ public class PlainInjector<T> implements Injector<T> {
 
 	boolean success = false;
 	for (Method method : subject.getClass().getDeclaredMethods()) {
+
+	    if (!isSingleParam(method)) {
+		continue;
+	    }
+
 	    if (isInjectable(method) && isMatchType(method, stuff)
 		    && isQualifierMatch(qualifier, method)) {
 
@@ -109,20 +114,26 @@ public class PlainInjector<T> implements Injector<T> {
 	return success;
     }
 
-    private void methodCalledScreem(Method method) {
-	if (methodValue.containsKey(method)) {
-	    throw new IllegalStateException("Method " + method.getName()
-		    + " in object " + subject + " already called with value: "
-		    + methodValue.get(method));
+    private boolean isSingleParam(Method method) {
+	return method.getParameterTypes().length == 1;
+    }
 
+    private void methodCalledScreem(Method method) {
+
+	if (!methodValue.containsKey(method)) {
+	    return;
 	}
+
+	throw new IllegalStateException("Method " + method.getName()
+		+ " in object " + subject + " already called with value: "
+		+ methodValue.get(method));
+
     }
 
     private boolean isQualifierMatch(Class<? extends Annotation> qualifier,
 	    Method method) {
 	return qualifier == null
-		|| method.getParameterTypes().length == 1
-		&& isQualifierMatch(qualifier,
+		|| isQualifierMatch(qualifier,
 			method.getParameterAnnotations()[0]);
     }
 
@@ -137,9 +148,7 @@ public class PlainInjector<T> implements Injector<T> {
     }
 
     private boolean isMatchType(Method method, Object stuff) {
-	return method.getParameterTypes().length == 1
-		&& method.getParameterTypes()[0].isAssignableFrom(stuff
-			.getClass());
+	return method.getParameterTypes()[0].isAssignableFrom(stuff.getClass());
     }
 
     private boolean isInjectable(Method method) {

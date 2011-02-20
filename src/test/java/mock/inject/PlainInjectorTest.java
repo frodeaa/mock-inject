@@ -27,8 +27,10 @@ public class PlainInjectorTest {
     }
 
     static class InjectSubject {
+
 	@Inject
 	private Dep dep;
+
     }
 
     @Test
@@ -40,6 +42,7 @@ public class PlainInjectorTest {
 	new PlainInjector<InjectSubject>(subject).inject(dep);
 
 	assertSame("Dep not injected", dep, subject.dep);
+
     }
 
     static class OtherDep {
@@ -260,6 +263,7 @@ public class PlainInjectorTest {
     }
 
     static class InjectMethod {
+
 	private Dep dep;
 
 	@Inject
@@ -398,6 +402,7 @@ public class PlainInjectorTest {
     }
 
     static class MultiMethod {
+
 	private Dep dep1;
 	private Dep dep2;
 
@@ -489,4 +494,91 @@ public class PlainInjectorTest {
 		KindB.class, subDep);
 
     }
+
+    static class MultiParamMethod {
+
+	@Inject
+	public void setMultiParam(Dep dep, OtherDep otherDep) {
+	}
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectMultiParamMethod() {
+
+	Dep dep = new Dep();
+	OtherDep otherDep = new OtherDep();
+
+	MultiParamMethod subject = new MultiParamMethod();
+
+	new PlainInjector<MultiParamMethod>(subject).inject(dep, otherDep);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectTypeNoMatch() {
+
+	OtherDep otherDep = new OtherDep();
+	InjectMethod subject = new InjectMethod();
+
+	new PlainInjector<InjectMethod>(subject).inject(otherDep);
+
+    }
+
+    static class TwoMethodDifferentType {
+
+	private Dep dep;
+	private OtherDep otherDep;
+
+	@Inject
+	public void setDep(Dep dep) {
+	    this.dep = dep;
+	}
+
+	@Inject
+	public void setOtherDep(OtherDep otherDep) {
+	    this.otherDep = otherDep;
+	}
+
+    }
+
+    @Test
+    public void testInjectTwoMethods() {
+
+	Dep dep = new Dep();
+	OtherDep otherDep = new OtherDep();
+	TwoMethodDifferentType subject = new TwoMethodDifferentType();
+
+	new PlainInjector<TwoMethodDifferentType>(subject).inject(dep).inject(
+		otherDep);
+
+	assertSame("Method not injected", dep, subject.dep);
+	assertSame("Method not injected", otherDep, subject.otherDep);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectTwoMethods() {
+
+	Dep dep = new Dep();
+	OtherDep otherDep = new OtherDep();
+	TwoMethodDifferentType subject = new TwoMethodDifferentType();
+
+	PlainInjector<TwoMethodDifferentType> injector = new PlainInjector<TwoMethodDifferentType>(
+		subject);
+	injector.inject(dep);
+	injector.inject(otherDep);
+	injector.inject(dep);
+
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFailInjectOnNullSubject() {
+
+	Dep dep = new Dep();
+
+	new PlainInjector<TwoMethodDifferentType>(null).inject(dep);
+
+    }
+
 }
