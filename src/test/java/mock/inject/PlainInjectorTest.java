@@ -245,6 +245,7 @@ public class PlainInjectorTest {
 
     static class FieldNoInject {
 
+	@SuppressWarnings("unused")
 	private Dep noInject;
 
     }
