@@ -207,6 +207,7 @@ public class PlainInjectorTest {
 	InjectSubject subject = new InjectSubject();
 
 	new PlainInjector<InjectSubject>(subject).inject(dep1, dep2);
+
     }
 
     @Test(expected = IllegalStateException.class)
@@ -237,6 +238,94 @@ public class PlainInjectorTest {
 
 	new PlainInjector<InjectTwoKinds>(subject).injectWith(KindA.class,
 		depKindA1).injectWith(KindA.class, depKindA2);
+
     }
 
+    static class InjectMethod {
+	private Dep dep;
+
+	@Inject
+	public void setDep(Dep dep) {
+	    this.dep = dep;
+	}
+
+    }
+
+    @Test
+    public void testInjectMethod() {
+
+	Dep dep = new Dep();
+	InjectMethod subject = new InjectMethod();
+
+	new PlainInjector<InjectMethod>(subject).inject(dep);
+
+	assertSame("Method not injected", dep, subject.dep);
+
+    }
+
+    static class InjectQualifierMethod {
+	private Dep dep;
+
+	@Inject
+	public void setDep(@KindA Dep dep) {
+	    this.dep = dep;
+	}
+
+    }
+
+    @Test
+    public void testInjectSinglePropertyWithQualifier() {
+
+	Dep dep = new Dep();
+	InjectQualifierMethod subject = new InjectQualifierMethod();
+
+	new PlainInjector<InjectQualifierMethod>(subject).injectWith(
+		KindA.class, dep);
+
+	assertSame("Method not injected", dep, subject.dep);
+
+    }
+
+    static class InjectQualifierMethodTwo {
+	private Dep dep1;
+
+	@Inject
+	public void setDep1(@KindA Dep dep) {
+	    this.dep1 = dep;
+	}
+
+	private Dep dep2;
+
+	@Inject
+	public void setDep2(@KindB Dep dep) {
+	    this.dep2 = dep;
+	}
+    }
+
+    @Test
+    public void testInjectTwoWithQualifier() {
+
+	Dep dep1 = new Dep();
+	Dep dep2 = new Dep();
+	InjectQualifierMethodTwo subject = new InjectQualifierMethodTwo();
+
+	new PlainInjector<InjectQualifierMethodTwo>(subject).injectWith(
+		KindA.class, dep1).injectWith(KindB.class, dep2);
+
+	assertSame("Method not injected", dep1, subject.dep1);
+	assertSame("Method not injected", dep2, subject.dep2);
+
+    }
+
+    @Test
+    public void testInjectSubClassParameter() {
+
+	SubDep subDep = new SubDep();
+	InjectMethod subject = new InjectMethod();
+
+	new PlainInjector<InjectMethod>(subject).inject(subDep);
+
+	assertSame("Method not injected", subDep, subject.dep);
+
+    }
 }
