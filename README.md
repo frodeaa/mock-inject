@@ -12,8 +12,8 @@ Example:
 	  public void test() {
 	 
 	   into( bean )
-	    .inject( mockA )
-	    .injectWith( KindB.class, mockB );
+	    .inject( mockA, mockB )
+	    .injectWith( KindB.class, mockA );
 	
 	   // test the bean
 	 }
@@ -21,11 +21,12 @@ Example:
 	class Bean {
 	     @Inject 
 	     private A a;
-	     
-	     private A b;
-	  
+	
 	     @Inject
-	     public setB( &#64;KindB A b ){...}
+	     private C c:
+	     	  
+	     @Inject
+	     public setB( @KindB A b ){...}
 	}
 
 The MockInject should probably only be used in tests...
