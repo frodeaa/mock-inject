@@ -1,4 +1,4 @@
-## MockInjector
+## MockInject
 
 Set fields and single parameter methods that are annotated with @Inject. A simple utility
 tool for testing CDI managed objects without needing to setting fields manually while testing,
