@@ -55,8 +55,24 @@ public class Reflect<T> {
 	}
     }
 
+    /**
+     * Set field value.
+     * 
+     * @param field
+     *            the field to change.
+     * @param value
+     *            the value to assign to the field.
+     * @return self.
+     */
     public Reflect<T> set(Field field, Object value) {
-
+	try {
+	    field.setAccessible(true);
+	    field.set(subject, value);
+	} catch (Exception e) {
+	    throw new RuntimeException(e);
+	} finally {
+	    field.setAccessible(false);
+	}
 	return this;
     }
 

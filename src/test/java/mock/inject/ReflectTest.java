@@ -25,11 +25,11 @@ public class ReflectTest {
     @Test
     public void testReflected() {
 
-	Integer one = new Integer(1);
+	Integer subject = new Integer(1);
 
-	Reflect<Integer> reflect = Reflect.on(one);
+	Reflect<Integer> reflect = Reflect.on(subject);
 
-	assertSame("Reflected unknown", one, reflect.reflected());
+	assertSame("Reflected unknown", subject, reflect.reflected());
 
     }
 
@@ -37,11 +37,11 @@ public class ReflectTest {
     public void testGetFieldValue() throws SecurityException,
 	    NoSuchFieldException {
 
-	FieldObject object = new FieldObject();
-	object.field = "field-value";
-	Field field = object.getClass().getDeclaredField("field");
+	FieldObject subject = new FieldObject();
+	subject.field = "field-value";
+	Field field = subject.getClass().getDeclaredField("field");
 
-	Object fieldValue = Reflect.on(object).get(field);
+	Object fieldValue = Reflect.on(subject).get(field);
 
 	assertSame("Field value", "field-value", fieldValue);
 
@@ -51,10 +51,10 @@ public class ReflectTest {
     public void testFailGetFieldValue() throws SecurityException,
 	    NoSuchFieldException {
 
-	FieldObject object = new FieldObject();
+	FieldObject subject = new FieldObject();
 	Field otherField = Other.class.getDeclaredField("field");
 
-	Reflect.on(object).get(otherField);
+	Reflect.on(subject).get(otherField);
 
     }
 
@@ -64,6 +64,27 @@ public class ReflectTest {
 
     static class Other {
 	private String field;
+    }
+
+    @Test
+    public void testSet() throws SecurityException, NoSuchFieldException {
+
+	FieldObject subject = new FieldObject();
+	Field field = subject.getClass().getDeclaredField("field");
+
+	Reflect.on(subject).set(field, "new-value");
+
+	assertSame("Field value", "new-value", subject.field);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testFailSet() throws SecurityException, NoSuchFieldException {
+
+	FieldObject subject = new FieldObject();
+	Field otherField = Other.class.getDeclaredField("field");
+
+	Reflect.on(subject).set(otherField, "new-value");
+
     }
 
 }
