@@ -18,7 +18,7 @@ public interface Injector<T> {
      * 
      * @param stuff
      *            the stuff to inject.
-     * @return the Injector..
+     * @return the Injector.
      */
     Injector<T> inject(Object... stuff);
 
