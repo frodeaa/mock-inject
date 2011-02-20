@@ -280,6 +280,18 @@ public class PlainInjectorTest {
 
     }
 
+    @Test
+    public void testInjectSinglePropertySubParameter() {
+
+	SubDep subDep = new SubDep();
+	InjectMethod subject = new InjectMethod();
+
+	new PlainInjector<InjectMethod>(subject).inject(subDep);
+
+	assertSame("Method not injected", subDep, subject.dep);
+
+    }
+
     static class InjectQualifierMethod {
 	private Dep dep;
 
@@ -298,6 +310,31 @@ public class PlainInjectorTest {
 
 	new PlainInjector<InjectQualifierMethod>(subject).injectWith(
 		KindA.class, dep);
+
+	assertSame("Method not injected", dep, subject.dep);
+
+    }
+
+    @Test
+    public void testInjectSinglePropertySubParameterWithQualifier() {
+
+	SubDep subDep = new SubDep();
+	InjectQualifierMethod subject = new InjectQualifierMethod();
+
+	new PlainInjector<InjectQualifierMethod>(subject).injectWith(
+		KindA.class, subDep);
+
+	assertSame("Method not injected", subDep, subject.dep);
+
+    }
+
+    @Test
+    public void testInjectPropetyIgnoreQualifier() {
+
+	Dep dep = new Dep();
+	InjectQualifierMethod subject = new InjectQualifierMethod();
+
+	new PlainInjector<InjectQualifierMethod>(subject).inject(dep);
 
 	assertSame("Method not injected", dep, subject.dep);
 
@@ -423,10 +460,32 @@ public class PlainInjectorTest {
     @Test(expected = IllegalStateException.class)
     public void testFailInjectMethodMissingInject() {
 
+	Dep dep = new Dep();
 	MethodNoInject subject = new MethodNoInject();
 
-	new PlainInjector<MethodNoInject>(subject).inject(new Dep());
+	new PlainInjector<MethodNoInject>(subject).inject(dep);
 
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectMethodNoQualifierMatch() {
+
+	Dep dep = new Dep();
+	InjectQualifierMethod subject = new InjectQualifierMethod();
+
+	new PlainInjector<InjectQualifierMethod>(subject).injectWith(
+		KindB.class, dep);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailInjectMethodSubParamNoQualifierMatch() {
+
+	SubDep subDep = new SubDep();
+	InjectQualifierMethod subject = new InjectQualifierMethod();
+
+	new PlainInjector<InjectQualifierMethod>(subject).injectWith(
+		KindB.class, subDep);
+
+    }
 }
