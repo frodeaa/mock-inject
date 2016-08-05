@@ -1,4 +1,4 @@
-## MockInject
+# MockInject
 
 Set fields and single parameter methods that are annotated with @Inject. A simple utility
 tool for testing CDI managed objects without needing to set fields manually while testing,
@@ -31,7 +31,7 @@ Example:
 
 The MockInject should probably only be used in tests...
 
-Maven dependency:
+## Maven dependency:
 
 	<dependency>
 		<groupId>mock-inject</groupId>
